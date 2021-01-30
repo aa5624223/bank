@@ -1,0 +1,278 @@
+﻿
+@{
+    ViewBag.Title = "用户管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*@foreach (var Company in ViewBag.Companys)
+    {
+
+    }*@
+@Scripts.Render("~/bundles/bootstrap-treeview")
+    <script type="text/javascript">
+    var Companys = eval('@Html.Raw(ViewBag.Companys)');
+    var Companys2 = eval('@Html.Raw(ViewBag.Companys4)');
+    var Roles = eval('@Html.Raw(ViewBag.Roles2)');
+    var People =  eval('@Html.Raw(ViewBag.People)');
+    </script>
+<script src="~/Scripts/Home/UserConfig.js"></script>
+<div class="page-header">
+    <h3>用户管理</h3>
+</div>
+<!-- 对话框 -->
+<div class="row">
+    <!-- 添加企业 -->
+    <div class="card col-lg-12" id="dialog_add" style="display:none">
+        <!-- 企业名称 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="add_Company">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;企业名称:</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="add_Company" placeholder="企业名称" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 企业编号 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="add_SortID">企业编号(5位):</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="add_SortID" placeholder="企业编号" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+    </div>
+    <!-- 添加部门 -->
+    <div class="card col-lg-12" id="dialog_add_dep" style="display:none" >
+        <!-- 企业名称 下拉框 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addDpt_CmpID">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;企业名称:</label>
+            <!-- is-invalid is-valid  -->
+            <select class="form-control col-lg-5" id="addDpt_CmpID">
+                @foreach (var item in ViewBag.Companys2)
+                {
+                    <option value="@item.Id">@item.SName</option>
+                }
+            </select>
+
+
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 部门名称  -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addDpt_Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;部门名称:</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="addDpt_Name" placeholder="部门名称" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 部门编号(2位) -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addDpt_SortID">部门编号(2位):</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="addDpt_SortID" placeholder="部门编号" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+
+    </div>
+    <!-- 添加个人 -->
+    <div class="card col-lg-12" id="dialog_add_per" style="display:none">
+        <!-- 名称 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addPer_NickName">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;名称:</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="addPer_NickName" v-model="NickName" placeholder="名称" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 工号 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addPer_WorkID">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;工号:</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="addPer_WorkID" v-model="WorkID" placeholder="工号" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 账号 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addPer_Username">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;账号:</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="addPer_Username" v-model="Username" placeholder="账号" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 密码 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addPer_Password">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;密码:</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-5" id="addPer_Password" v-model="Password" placeholder="密码" type="text">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 企业 下拉框 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addPer_CmpID">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;企业:</label>
+            <!-- is-invalid is-valid  -->
+            <select v-model="ComID" id="addPer_CmpID">
+                <template v-for="(item,index) in CompanyList">
+                    <option :value="item.Id">{{item.SName}}</option>
+                </template>
+            </select>
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+        <!-- 部门 下拉框 -->
+        <div class="form-group row">
+            <label class="col-form-label col-lg-4 mr-4" for="addPer_DptID">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;部门:</label>
+            <!-- is-invalid is-valid  -->
+            <select v-model="DepID" id="addPer_DptID">
+                <template v-for="(item,index) in DepList">
+                    <option :value="item.Id">{{item.SName}}</option>
+                </template>
+            </select>
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2">(必输)</label>
+        </div>
+    </div>
+</div>
+<!-- 主体信息 -->
+<div class="row">
+    <!-- 显示企业信息 -->
+    <div class="card col-lg-3 col-md-4 col-sm-5 ml-lg-4" style="height:730px;overflow-y:auto;">
+        <div class="User_Add1" style="margin:auto;text-align:center;padding-top:20px;">
+            <a style="font-size:20px;" onclick="Dialog_Add()">
+                <i class="icon-add" style="color:green;font-weight:700"></i>添加企业
+            </a>
+            <a style="font-size:20px;" onclick="Dialog_add_dep()">
+                <i class="icon-add" style="color:green;font-weight:700"></i>添加部门
+            </a>
+            <a style="font-size:20px;" onclick="Dialog_del_cmpAndDpt()">
+                <i class="icon-minus" style="color:red;font-weight:700"></i>删除
+            </a>
+        </div>
+        <div class="card-body" style="padding-left:0px!important;padding-right:0px!important">
+            <h4>企业选择</h4>
+            <div id="CompanyTree">
+
+            </div>
+        </div>
+    </div>
+    <!-- 显示人员信息 -->
+    <div class="card col-lg-2 col-md-3 col-sm-4 ml-lg-4" style="height:730px;overflow-y:auto">
+        <div class="User_Add1" style="margin:auto;text-align:center;padding-top:20px;">
+            <a style="font-size:20px;" onclick="Dialog_add_per()">
+                <i class="icon-add" style="color:green;font-weight:700"></i>添加员工
+            </a>
+            
+            <a style="font-size:20px;" onclick="Dialog_del_per()">
+                <i class="icon-minus" style="color:Red;font-weight:700"></i>删除员工
+            </a>
+        </div>
+        <div class="card-body">
+            <h4>员工选择</h4>
+            <div id="PeopleTree">
+            </div>
+        </div>
+    </div>
+
+    <div id="Vue_Area" class="card col-lg-6 col-md-10 col-sm-10 ml-lg-4">
+        <div class="card-body">
+            <h4>基本信息</h4>
+            <div class="form-group row">
+                <label for="User_SName" class="col-lg-3 col-form-label">姓名:</label>
+                <div class="col-lg-4">
+                    <input type="text" v-model="SName" readonly class="form-control-plaintext" id="User_SName" value="林林林">
+                </div>
+                <div class="col-lg-5"></div>
+                <label for="User_UserName" class="col-lg-3 col-form-label">用户名:</label>
+                <div class="col-lg-4">
+                    <input type="text" v-model="User_Name" readonly class="form-control-plaintext" id="User_UserName" value="59728">
+                </div>
+                <div class="col-lg-5"></div>
+                <label for="User_Dep" class="col-lg-4 col-form-label">企业/部门:</label>
+                <div class="col-lg-7">
+                    <select class="form-control" id="User_Dep" v-model="DepSel">
+                        @foreach (var Company in ViewBag.Companys2)
+                        {
+                            foreach (var Dep in Company.deps)
+                            {
+                                <option value="@Dep.Id">@Company.SName | @Dep.SName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <button class="btn btn-primary ml-2" v-on:click="SubmitEdit">提交修改</button>
+            </div>
+            <hr />
+            <h4>
+                企业列表
+                <button class="btn btn-success" v-on:click="SelectAllCmp">全选</button>
+                <button class="btn btn-default" v-on:click="CancelAllCmp">全撤销</button>
+            </h4>
+
+            <div style="height:220px;overflow-y:auto;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;">
+                <div class="newLine">
+                    <label class="col-form-label">地产：</label>
+                    <br />
+                    @foreach (var item in ViewBag.Companys3)
+                    {
+                        if (item.TypeID == 41)
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" name="CompCheck1" v-model="Cmp1" id="option @item.id" type="checkbox" value="@item.id">
+                                <label class="form-check-label" for="option @item.id">@item.Company</label>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div class="newLine">
+                    <label class="col-form-label">制造业：</label>
+                    <br />
+                    @foreach (var item in ViewBag.Companys3)
+                    {
+                        if (item.TypeID == 40)
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" name="CompCheck2" id="option @item.id" v-model="Cmp1" type="checkbox" value="@item.id">
+                                <label class="form-check-label" for="option @item.id">@item.Company</label>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+            <hr />
+            <h4>
+                权限列表
+                <button class="btn btn-success" v-on:click="SelectAllRole">全选</button>
+                <button class="btn btn-default" v-on:click="CancelAllRole">全撤销</button>
+            </h4>
+            <div style="height:220px;overflow-y:auto;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;">
+                @foreach (var item in ViewBag.Roles)
+                {
+                    <div class="newLine">
+                        <label class="col-form-label">@item.SName：</label>
+                        <br />
+                        @foreach (var item2 in item.Child)
+                        {
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">&emsp;&emsp;@item2.SName:&emsp;</label>
+                                <input class="form-check-input" id="Role @item2.id" v-model="Site1" type="checkbox" value="@item2.id">
+                                <label class="form-check-label" for="Role @item2.id">访问 &emsp;</label>
+                                @foreach (var item3 in item2.Child)
+                                {
+                                    <input class="form-check-input" id="Role @item3.id" v-model="Site1" type="checkbox" value="@item3.id">
+                                    <label class="form-check-label" for="Role @item3.id">@item3.SName &emsp;</label>
+                                }
+                            </div>
+                            <br />
+                        }
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

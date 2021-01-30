@@ -1,0 +1,136 @@
+﻿
+@{
+    string method = this.Request.QueryString["method"];
+    if (string.IsNullOrEmpty(method))
+    {
+        ViewBag.Title = "还款提醒";
+    }
+    else
+    {
+        ViewBag.Title = "我的桌面";
+    }
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dataTables_info{
+        display:none;
+    }
+</style>
+<script>
+    var method = '@ViewBag.method';
+</script>
+<script src="~/Scripts/Home/ServerRec2.js"></script>
+<!-- 标题 -->
+<div class="page-header">
+    <h3>还款提醒</h3>
+</div>
+<!-- 对话框 -->
+<div class="row">
+    <div id="dialog_print" class="card" style="display:none;width:206mm">
+        <div class="card-body printArea" id="printArea" style="width:206mm;">
+            <div class="row">
+                <div style="width:25%;float:left">
+                    <img src="~/Images/CF.jpg" style="width:260px;height:60px;" />
+                </div>
+                <div style="width:58%;float:left;text-align:center;color: red;font-size:140%;line-height:71px;">
+                    常发集团{{Month_Now}}月还款项汇总表
+                </div>
+                <div style="width:16%;float:left;text-align:center;font-size:100%;line-height:81px;font-weight:600">
+                    （单位：万元）
+                </div>
+            </div>
+            <table style="width:200mm;border-collapse: collapse;" >
+                <thead style="color:black;text-align:center;font-size:100%">
+                    <tr style="padding:5px 0px 5px 5px;">
+                        <th style="border:2px solid black;width:10%">#</th>
+                        <th style="border:2px solid black;width:14%">模块</th>
+                        <th style="border:2px solid black;width:42%">企业</th>
+                        <th style="border:2px solid black;width:21%">下月到期</th>
+                        <th style="border:2px solid black;width:21%">总余额</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom:2px solid black;">
+                        <th colspan="5" style="border-left:0px;border-right:0px;border-bottom:2px solid black;">未还借款</th>
+                    </tr>
+                    <tr v-for="(item,index) in PrintList1" style="text-align:left;border-left:2px solid black;border-right:2px solid black;">
+                        <td style="border:0px;">{{index+1}}</td>
+                        <td style="border:0px;">{{item.cmp.SType.TypeName}}</td>
+                        <td style="border:0px;">{{item.cmp.Company}}</td>
+                        <td style="border:0px;">{{item.LM_Balance}}</td>
+                        <td style="border:0px;">{{item.Balance}}</td>
+                    </tr>
+                    <tr style="border-left: 2px solid black; border-right: 2px solid black;border-bottom:2px solid black;    ">
+                        <td colspan="3" style="text-align:center;border:0px;">合计</td>
+                        <td style="border: 0px;">{{Credit_Total_1}}</td>
+                        <td style="border: 0px;">{{Credit_Total_2}}</td>
+                    </tr>
+                    <tr style="border-bottom:2px solid;">
+                        <th colspan="5" style="border-left:0px;border-right:0px;">未还承兑</th>
+                    </tr>
+                    <tr v-for="(item,index) in PrintList2" style="border-left: 2px solid black; border-right: 2px solid black;">
+                        <td style="border:0px;">{{index+1}}</td>
+                        <td style="border:0px;">{{item.cmp.SType.TypeName}}</td>
+                        <td style="border:0px;">{{item.cmp.Company}}</td>
+                        <td style="border:0px;">{{item.LM_Balance}}</td>
+                        <td style="border:0px;">{{item.Balance}}</td>
+                    </tr>
+                    <tr style="border-left: 2px solid black; border-right: 2px solid black;border-bottom:2px solid black;">
+                        <td colspan="3" style="text-align:center;border:0px;">合计</td>
+                        <td style="border: 0px;">{{Acceptance_Total_1}}</td>
+                        <td style="border: 0px;">{{Acceptance_Total_2}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div style="text-align:right">
+            <button class="btn btn-success" onclick="print()">打印</button>
+            <span>打印布局请选择纵向</span>
+            <button class="btn" onclick="DiaLog.close()">取消</button>
+        </div>
+    </div>
+</div>
+<!-- 主体信息 -->
+<div class="row">
+    <div class="card ml-auto mr-auto border" style="width:98%;">
+        <div class="card-body">
+            <button class="dt-button" onclick="Dialog_Print()">打印</button>
+        </div>
+    </div>
+    <div class="card ml-auto mr-auto border" style="height:600px;width:48%">
+        <div class="card-header">
+            当月贷款到期提醒
+        </div>
+        <table id="tab_dataInfo1" class="table custom-table dataTable order-column" style="width:100%;text-align:center;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>编号</th>
+                    <th>板块</th>
+                    <th>企业名称</th>
+                    <th>下月到期</th>
+                    <th>总余额</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="card ml-auto mr-auto border" style="height:600px;width:48%">
+        <div class="card-header">
+            当月承兑到期提醒
+        </div>
+        <table id="tab_dataInfo2" class="table custom-table dataTable order-column" style="width:100%;text-align:center;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>编号</th>
+                    <th>板块</th>
+                    <th>企业名称</th>
+                    <th>下月到期</th>
+                    <th>总余额</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>

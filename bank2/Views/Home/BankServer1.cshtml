@@ -1,0 +1,318 @@
+﻿
+@{
+    ViewBag.Title = "借款业务";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Home/BankServer1.js"></script>
+<!-- 标题 -->
+<div class="page-header">
+    <h3>借款业务</h3>
+</div>
+<!-- 对话框 -->
+<div class="row">
+    <!-- 新增贷款 -->
+    <div id="dialog_add_loan" class="card col-lg-12" style="display:none">
+        <div class="card-body">
+            <!-- 企业名称 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_Company1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;企业名称:</label>
+                <select class="form-control col-lg-5" id="add_Company1">
+                    @foreach (var item in ViewBag.ComList)
+                    {
+                        <option value="@item.Company">@item.Company</option>
+                    }
+                </select>
+            </div>
+            <!-- 银行名称 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_Bank1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;银行名称:</label>
+                <select class="form-control col-lg-5" id="add_Bank1">
+                    @foreach (var item in ViewBag.BankList)
+                    {
+                        <option value="@item.Bank">@item.Bank</option>
+                    }
+                </select>
+            </div>
+            <!-- 贷款摘要 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4  mr-4" for="add_Abstract">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;贷款摘要:</label>
+                <!-- is-invalid is-valid  -->
+                <textarea class="form-control col-lg-5" id="add_Abstract" rows="3" style="resize: none">贷款</textarea>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2"></label>
+            </div>
+            <!-- 贷款利率 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_Rates">&nbsp;&nbsp;&nbsp;贷款利率(%):</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="add_Rates" placeholder="贷款利率(%)" type="number">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3">(必输)</label>
+                <div class="offset-lg-4 col-lg-4">&emsp;参照格式:1.11</div>
+            </div>
+            <!-- 贷款金额 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_LoanAmount">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贷款金额:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="add_LoanAmount" placeholder="贷款金额" value="0" type="number">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3">（必输）</label>
+            </div>
+            <!-- 承兑日期 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_OccDate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贷款日期:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="add_OccDate" type="date">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3">(必输)</label>
+            </div>
+            <!-- 到期日期 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_EndDate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;到期日期:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="add_EndDate" type="date">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3">(必输)</label>
+            </div>
+            <!-- 备注 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4  mr-4" for="add_Remarks">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;备注:</label>
+                <!-- is-invalid is-valid  -->
+                <textarea class="form-control col-lg-5" id="add_Remarks" rows="3" style="resize: none"></textarea>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2"></label>
+            </div>
+        </div>
+    </div>
+    <!-- 编辑贷款 -->
+    <div id="dialog_edit" class="card col-lg-12" style="display:none">
+        <div class="card-body">
+            <!-- 企业名称 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="edit_Company">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;企业名称:</label>
+                <select class="form-control col-lg-5" id="edit_Company">
+                    @foreach (var item in ViewBag.ComList)
+                    {
+                        <option value="@item.Company">@item.Company</option>
+                    }
+                </select>
+            </div>
+            <!-- 银行名称 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="edit_Bank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;银行名称:</label>
+                <select class="form-control col-lg-5" id="edit_Bank">
+                    @foreach (var item in ViewBag.BankList)
+                    {
+                        <option value="@item.Bank">@item.Bank</option>
+                    }
+                </select>
+            </div>
+            <!-- 贷款摘要 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4  mr-4" for="edit_Abstract">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;贷款摘要:</label>
+                <!-- is-invalid is-valid  -->
+                <textarea class="form-control col-lg-5" id="edit_Abstract" rows="3" style="resize: none">贷款</textarea>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2"></label>
+            </div>
+            <!-- 贷款利率 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="edit_Rates">&nbsp;&nbsp;&nbsp;贷款利率(%):</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="edit_Rates" placeholder="贷款利率(%)" type="number">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3">(必输)</label>
+                <div class="offset-lg-4 col-lg-4">&emsp;参照格式:1.11</div>
+            </div>
+            <!-- 贷款金额 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="edit_LoanAmount">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贷款金额:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="edit_LoanAmount" placeholder="贷款金额" type="number">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3">（必输）</label>
+            </div>
+            <!-- 贷款日期 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="edit_OccDate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贷款日期:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="edit_OccDate" type="date">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3"></label>
+            </div>
+            <!-- 到期日期 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="edit_EndDate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;到期日期:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-4" id="edit_EndDate" type="date">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-3"></label>
+            </div>
+            <!-- 备注 -->
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4  mr-4" for="edit_Remarks">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;备注:</label>
+                <!-- is-invalid is-valid  -->
+                <textarea class="form-control col-lg-5" id="edit_Remarks" rows="3" style="resize: none"></textarea>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2"></label>
+            </div>
+        </div>
+    </div>
+    <!-- 新增还款 -->
+    <div id="dialog_add_repay" class="card col-lg-12" style="display:none">
+        <div v-cloak class="form-group row">
+            <!-- 企业名称 -->
+            <a style="display:none;">{{Now_Repayed3}}</a>
+            <label class="col-form-label col-lg-2 mr-4 text-right" for="add2_Company">企业名称:</label>
+            <select v-cloak class="form-control col-lg-3" id="add2_Company" v-model="CmpIdx">
+                <option v-for="(item,index) in CompanyList" :value="index">{{item.Company}}</option>
+            </select>
+            <!-- 还款金额 -->
+            <label class="col-form-label col-lg-2 mr-4 text-right" for="add2_Repay">本次还款:</label>
+            <input class="form-control col-lg-3" id="add2_Repay"  placeholder="本次还款" v-model.lazy="Now_Repayed" type="number">
+            <div class=" col-lg-2 mr-4 text-right"></div>
+            <!-- is-invalid is-valid  -->
+
+            <div class="col-lg-3"></div>
+            <!-- invalid-feedback valid-feedback -->
+            @*<label class="col-form-label col-lg-2"></label>*@
+            <div class="col-lg-2"></div>
+        </div>
+        <div v-cloak class="form-group row">
+            <!-- 银行 -->
+            <label class="col-form-label col-lg-2 mr-4 text-right" for="add2_Bank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;银行名称:</label>
+            <select class="form-control col-lg-3" id="add2_Bank" v-model="BankIdx">
+                <option v-for="(item,index) in BankList" :value="index">{{item}}</option>
+            </select>
+            <!-- 还款日期 -->
+            <label class="col-form-label col-lg-2 mr-4 text-right" for="add2_OccDate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;还款日期:</label>
+            <!-- is-invalid is-valid  -->
+            <input class="form-control col-lg-3" id="add2_OccDate" v-model="OccDate" type="date">
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-2"></label>
+        </div>
+        <div v-cloak class="form-group row">
+            <!-- 还款摘要 -->
+            <label class="col-form-label col-lg-2 mr-4 text-right" for="add2_Abstract">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;还款摘要:</label>
+            <!-- is-invalid is-valid  -->
+            <textarea class="form-control col-lg-3" id="add2_Abstract" v-model="Abstract" rows="3" style="resize: none">还款</textarea>
+            <!-- invalid-feedback valid-feedback -->
+            <!-- 备注 -->
+            <label class="col-form-label col-lg-2 mr-4 text-right" for="add2_Remarks">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;备注:</label>
+            <!-- is-invalid is-valid  -->
+            <textarea class="form-control col-lg-3" id="add2_Remarks" v-model="Remarks" rows="3" style="resize: none"></textarea>
+            <!-- invalid-feedback valid-feedback -->
+            <label class="col-form-label col-lg-1"></label>
+        </div>
+        <!-- 表格部分 -->
+        <table v-cloak id="tab_repay" class="table custom-table dataTable no-footer order-column selfTable" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>编号</th>
+                    <th>状态</th>
+                    <th>贷/还摘要</th>
+                    <th>贷款日期</th>
+                    <th>到期日期</th>
+                    <th>贷款金额</th>
+                    <th>已还金额</th>
+                    <th>余额</th>
+                    <th>本次还款</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                @*:class="{makeColor:username!=''}"*@
+                <tr v-for="(item,index) in TableList">
+                    <td>{{index+1}}</td>
+                    <td style="display:none">{{item.id}}</td>
+                    <td>{{item.Flag}}</td>
+                    <td>{{item.Abstract}}</td>
+                    <td>{{ToDate(item.OccDate)}}</td>
+                    <td>{{ToDate(item.EndDate)}}</td>
+                    <td>{{item.LoanAmount}}</td>
+                    <td>{{item.Repayed}}</td>
+                    <td>{{item.Balance}}</td>
+                    <td>
+                        <input type="number" value="0" disabled="disabled" v-model="item.Now_Repayed" />
+                    </td>
+                    <td>{{item.Remarks}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+        <div v-cloak class="row">
+            <label class="col-form-label col-lg-1 mr-4 text-right">合计</label>
+            <label class="col-form-label col-lg-2">贷款金额：{{Total_Loan}}</label>
+            <label class="col-form-label col-lg-2">已还金额：{{Total_Repayed}}</label>
+            <label class="col-form-label col-lg-2">余额：{{Total_Balance}}</label>
+            <label class="col-form-label col-lg-2">本次还款：{{Now_Repayed2}}</label>
+            <label class="col-form-label col-lg-2">还款后余额：{{Now_Total_Balance2}}</label>
+        </div>
+        @*<div>
+            <button v-on:click="ttttt()">测试</button>
+        </div>*@
+    </div>
+
+</div>
+<!-- 主体内容 -->
+<div class="card col-lg-12" style="height:730px;">
+    <div class="card-body">
+        <div id="table_Search" style="margin-top:10px;">
+            <label for="Search_Type">板块:</label>
+            <select id="Search_Type" v-model="TypeIdx" onchange="Search_Type_Change()">
+                @*<option value="全部">全部</option>*@
+                @foreach (var item in ViewBag.TypeList)
+                {
+                    <option value="@item.id">@item.TypeName</option>
+                }
+            </select>
+            <label for="Search_Company">企业:</label>
+            <select id="Search_Company" v-model="CmpIdx">
+                <option v-for="(item,index) in CompanyList2" :value="index">{{item.Company}}</option>
+            </select>
+            <label>银行</label>
+            <select id="Search_Bank" v-model="BankIdx">
+                <option v-for="(item,index) in BankList" :value="index">{{item}}</option>
+            </select>
+            @*<label for="Ser_Begin">业务日期:</label>
+            <input type="date" id="Ser_Begin" />-
+            <input type="date" id="Ser_End" />
+            <label for="End_Begin">到期日期:</label>
+            <input type="date" id="End_Begin" />-
+            <input type="date" id="End_End" />*@
+
+        </div>
+        <div style="overflow-y:auto;overflow-x:auto!important">
+            <div class="datatableSelfWidth">
+                <table id="tab_dataInfo" class="table custom-table dataTable no-footer order-column" style="width:100%;text-align:center;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>编号</th>
+                            <th>类型</th>
+                            <th>摘要</th>
+                            <th>业务日期</th>
+                            <th>到期日期</th>
+                            <th>贷款金额</th>
+                            <th>已还金额</th>
+                            <th>还款金额</th>
+                            <th>余额</th>
+                            <th>业务状态</th>
+                            <th>利率</th>
+                            <th>企业名称</th>
+                            <th>企业</th>
+                            <th>银行</th>
+                            <th>创建日期</th>
+                            <th>备注信息</th>
+                            <th>操作员</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+

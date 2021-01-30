@@ -1,0 +1,184 @@
+﻿
+@{
+    ViewBag.Title = "借款记录";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    var Company = '@ViewBag.Company';
+    var Methods = '@ViewBag.Methods';
+</script>
+<script src="~/Scripts/Home/ServerRec3.js"></script>
+<div class="page-header">
+    <h3>借款记录</h3>
+</div>
+<!-- 对话 -->
+<div class="row">
+    <!-- 打印 -->
+    <div id="dialog_print" class="card col-lg-12" style="display:none">
+        <div class="card-body printArea" id="printArea">
+            <div class="row">
+                <div style="width:25%;float:left">
+                    <img src="~/Images/CF.jpg" style="width:260px;height:60px;" />
+                </div>
+                <div style="width:58%;float:left;text-align:center;color: red;font-size:140%;line-height:71px;">
+                    江苏常发集团借款记录表
+                </div>
+                <div style="width:16%;float:left;text-align:center;font-size:100%;line-height:81px;font-weight:600">
+                    （单位：万元）
+                </div>
+            </div>
+            <table style="width:100%;border-collapse: collapse;" id="Print_datatable1">
+                <thead style="color:black;text-align:center;font-size:100%;">
+                    <tr style="padding:5px 0px 5px 5px;">
+                        <th>#</th>
+                        <th>板块/公司名</th>
+                        <th>借款总金额</th>
+                        <th>已还总金额</th>
+                        <th>余额</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in PrintList">
+                        <td style="border:2px solid black;padding:5px;text-align:center;">{{index+1}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:center;">{{item.cmp.SType.TypeName}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.Sum_LoanAmount}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.Sum_Repayed}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.Sum_Balance}}</td>
+                    </tr>
+                </tbody>
+                <tfoot style="font-size:110%;font-weight:600">
+                    <tr>
+                        <td colspan="2" style="text-align:center;font-weight:600;border:2px solid black">总计</td>
+                        <td style="text-align:right;border:2px solid black">{{Total1}}</td>
+                        <td style="text-align:right;border:2px solid black">{{Total2}}</td>
+                        <td style="text-align:right;border:2px solid black">{{Total3}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <table style="width:100%;border-collapse: collapse;" id="Print_datatable2">
+                <thead style="color:black;text-align:center;font-size:100%">
+                    <tr style="padding:5px 0px 5px 5px;">
+                        <th style="border:2px solid black;">#</th>
+                        <th style="border:2px solid black;">企业名称</th>
+                        <th style="border:2px solid black;">银行名称</th>
+                        <th style="border:2px solid black;">业务日期</th>
+                        <th style="border:2px solid black;">到期日期</th>
+                        <th style="border:2px solid black;">借款金额</th>
+                        <th style="border:2px solid black;">还款金额</th>
+                        <th style="border:2px solid black;">余额</th>
+                        <th style="border:2px solid black;">利率</th>
+                        <th style="border:2px solid black;">备注信息</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in PrintList2">
+                        <td style="border:2px solid black;padding:5px;text-align:center;">{{index+1}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:center;">{{item.Company}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:center;">{{item.Bank}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:center;">{{item.OccDate}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:center;">{{item.EndDate}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.LoanAmount}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.RepayAmount}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.Balance}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.Rates}}</td>
+                        <td style="border:2px solid black;padding:5px;text-align:right;">{{item.Remarks}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align:right">
+            <button class="btn btn-success" onclick="print()">打印</button>
+            <span id="Btn_warm">{{Btn_warm}}</span>
+            <button class="btn" onclick="DiaLog.close()">取消</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- 汇总区域 -->
+    <div class="card col-lg-12 ml-auto mr-auto">
+        <div class="card-body" style="overflow-y:auto">
+            <div id="table_Search">
+                <div>
+                    <label for="Search_Type">板块:</label>
+                    <select v-model="TypeName" id="Search_Type">
+                        <option value="">全部</option>
+                        <template v-for="(item,index) in TypeList">
+                            <option :value="item.TypeName">{{item.TypeName}}</option>
+                        </template>
+                    </select>
+                    <label for="Search_Company">公司名:</label>
+                    <select v-model="Company" id="Search_Company" style="width:200px">
+                        <option value="">全部</option>
+                        <template v-for="(item,index) in CompanyList">
+                            <option :value="item.Company">{{item.Company}}</option>
+                        </template>
+                    </select>
+                    <label for="Search_Bank">银行名:</label>
+                    <select v-model="Bank" id="Search_Bank" style="width:120px">
+                        <option value="">全部</option>
+                        <template v-for="(item,index) in BankList">
+                            <option :value="item">{{item}}</option>
+                        </template>
+                    </select>
+                    <label for="Search_Flag">状态:</label>
+                    <select v-model="Flag" id="Search_Flag" style="width:50px">
+                        <option value="未清">未清</option>
+                        <option value="已清">已清</option>
+                    </select>
+                    <br />
+                    <label for="Ser_Begin">业务日期:</label>
+                    <input type="date" id="Ser_Begin" v-model="Ser_Begin" style="width:130px;" />
+                    <input type="date" id="Ser_End" v-model="Ser_End" style="width:130px;" />
+                    @*<input type="radio" value="0" v-model="DateModel" id="Rad1" /><label for="Rad1">之前</label>
+                        <input type="radio" value="1" v-model="DateModel" id="Rad2" /><label for="Rad2">当月</label>*@
+                    <label for="End_Begin">到期日期:</label>
+                    <input type="date" id="End_Begin" v-model="End_Begin" style="width:130px;" />-
+                    <input type="date" id="End_End" v-model="End_End" style="width:130px;" />
+                    <input type="radio" value="0" v-model="Model" id="Rad3" /><label for="Rad3">板块汇总</label>
+                    <input type="radio" value="1" v-model="Model" id="Rad4" /><label for="Rad4">公司汇总</label>
+                    <input type="radio" value="2" v-model="Model" id="Rad5" /><label for="Rad5">明细查询</label>
+                    <button class="btn btn-success" v-on:click="btn_Search">查询</button>
+                    <button class="btn btn-success" onclick="Dialog_Print()">打印</button>
+                </div>
+            </div>
+            <!-- 汇总 -->
+            <table id="tab_dataInfo" class="table custom-table dataTable no-footer order-column" style="width:100%;text-align:center">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>板块/公司名</th>
+                        <th>借款总金额</th>
+                        <th>已还总金额</th>
+                        <th>余额</th>
+                    </tr>
+                </thead>
+            </table>
+            <!-- 明细  -->
+            <div style="overflow-y:auto">
+                <div class="datatableSelfWidth">
+                    <table id="tab_dataInfo2" class="table custom-table dataTable no-footer order-column" style="width:100%;text-align:center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>类型</th>
+                                <th>摘要</th>
+                                <th>业务日期</th>
+                                <th>到期日期</th>
+                                <th>借款金额</th>
+                                <th>还款金额</th>
+                                <th>余额</th>
+                                <th>状态</th>
+                                <th>利率</th>
+                                <th>企业名称</th>
+                                <th>银行名称</th>
+                                <th>创建日期</th>
+                                <th>备注信息</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

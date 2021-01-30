@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "授信记录";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Home/ServerRec1.js"></script>
+<!-- 标题 -->
+<div class="page-header">   
+    <h3>授信记录</h3>
+</div>
+<!-- 对话框 -->
+<div class="row">
+    <!-- 打印 -->
+    <div id="dialog_print" class="card col-lg-12" style="display:none">
+        <div class="card-body printArea" id="printArea">
+            <div class="row">
+                <div style="width:25%;float:left">
+                    <img src="~/Images/CF.jpg" />
+                </div>
+                <div style="width:58%;float:left;text-align:center;color: red;font-size:200%;line-height:71px;">
+                    江苏常发集团银行授信明细表
+                </div>
+                <div style="width:16%;float:left;text-align:center;font-size:120%;line-height:81px;font-weight:600">
+                    （单位：万元）
+                </div>
+            </div>
+            <table style="width:100%;border-collapse: collapse;">
+                <thead style="color:black;text-align:center;font-size:100%">
+                    <tr style="padding:5px 0px 5px 5px;">
+                        <th style="border:2px solid black;">#</th>
+                        <th style="border:2px solid black;">银行名称</th>
+                        <th style="border:2px solid black;">企业名称</th>
+                        <th style="border:2px solid black;">信用额度</th>
+                        <th style="border:2px solid black;">承兑额度</th>
+                        <th style="border:2px solid black;">贷款额度</th>
+                        <th style="border:2px solid black;">利息(%)</th>
+                        <th style="border:2px solid black;">欠款总额</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in PrintList">
+                        <td style="border:2px solid black;padding:5px;">{{index+1}}</td>
+                        <td style="border:2px solid black;padding:5px;">{{item.Bank}}</td>
+                        <td style="border:2px solid black;padding:5px;">{{item.Company}}</td>
+                        <td style="text-align:right;border:2px solid black;padding:5px;">{{item.Credit!=0?item.Credit:''}}</td>
+                        <td style="text-align:right;border:2px solid black;padding:5px;">{{item.Acceptance!=0?item.Acceptance:''}}</td>
+                        <td style="text-align:right;border:2px solid black;padding:5px;">{{item.Loans!=0?item.Loans:''}}</td>
+                        <td style="text-align:right;border:2px solid black;padding:5px;">{{item.Rates!=0?item.Rates:''}}</td>
+                        <td style="text-align:right;border:2px solid black;padding:5px;">{{item.Arrears!=0?item.Arrears:''}}</td>
+                    </tr>
+                </tbody>
+                <tfoot style="font-size:110%;font-weight:600">
+                    <tr>
+                        <td colspan="3" style="text-align:center;font-weight:600;border:2px solid black">总计</td>
+                        <td style="text-align:right;border:2px solid black">{{Credit_Total}}</td>
+                        <td style="text-align:right;border:2px solid black">{{Acceptance_Total}}</td>
+                        <td style="text-align:right;border:2px solid black">{{Loans_Total}}</td>
+                        <td style="border: 2px solid black"></td>
+                        <td style="text-align:right;border:2px solid black">{{Arrears_Total}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div style="text-align:right">
+            <button class="btn btn-success" onclick="print()">打印</button>
+            <span>打印布局请选择横向</span>
+            <button class="btn" onclick="DiaLog.close()">取消</button>
+        </div>
+    </div>
+</div>
+<!-- 主体 -->
+<div class="card col-lg-12" style="height:730px">
+    <div id="table_Search" style="margin-top:10px;">
+        <label for="Search_Company">企业:</label>
+        <select id="Search_Company" v-model="CmpIdx">
+            <option v-for="(item,index) in CompanyList" :value="index">{{item.Company}}</option>
+        </select>
+        <label>银行</label>
+        <select id="Search_Bank" v-model="BankIdx">
+            <option v-for="(item,index) in BankList" :value="index">{{item}}</option>
+        </select>
+    </div>
+    <table id="tab_dataInfo" class="table custom-table dataTable order-column" style="width:100%;text-align:center;">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>编号</th>
+                <th>模块</th>
+                <th>公司名称</th>
+                <th>银行名称</th>
+                <th>信用额度</th>
+                <th>贷款额度</th>
+                <th>承兑额度</th>
+                <th>利率</th>
+                <th>未还总额</th>
+            </tr>
+        </thead>
+    </table>
+</div>

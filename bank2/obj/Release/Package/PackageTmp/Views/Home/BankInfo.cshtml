@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewBag.Title = "银行信息";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Home/BankInfo.js"></script>
+<div class="page-header">
+    <h3>银行信息</h3>
+</div>
+<!-- 对话框 -->
+<div class="row">
+    <!-- 添加银行信息 -->
+    <div class="card col-lg-12" id="dialog_add" style="display:none">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_Bank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;银行名称:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-5" id="add_Bank" placeholder="银行名称" type="text">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2">(必输)</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_SortID">银行编号(5位):</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-5" id="add_SortID" placeholder="银行编号" type="text">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2">(必输)</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4 mr-4" for="add_TypeID">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;银行类别:</label>
+                <!-- is-invalid is-valid  -->
+                <select class="form-control col-lg-5" id="add_TypeID">
+                    @foreach (var item in ViewBag.TypeList)
+                    {
+                        <option value="@item.id">@item.TypeName</option>
+                    }
+                </select>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2">(必输)</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4  mr-4" for="add_Remarks">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;备注:</label>
+                <!-- is-invalid is-valid  -->
+                <textarea class="form-control col-lg-5" id="add_Remarks" rows="3" style="resize: none"></textarea>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2"></label>
+            </div>
+        </div>
+    </div>
+    <!-- 编辑银行信息 -->
+    <div id="dialog_edit" class="card col-lg-12" style="display:none;">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4" for="Edit_Bank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;银行名称:</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-5" id="Edit_Bank" placeholder="银行名称" type="text">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2">(必输)</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4">银行编号(5位):</label>
+                <!-- is-invalid is-valid  -->
+                <input class="form-control col-lg-5" id="Edit_SortID" placeholder="银行编号" type="text">
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2">(必输)</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;银行类别:</label>
+                <!-- is-invalid is-valid  -->
+                <select class="form-control col-lg-5" id="Edit_TypeID">
+                    @foreach (var item in ViewBag.TypeList)
+                    {
+                        <option value="@item.id">@item.TypeName</option>
+                    }
+                </select>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2">(必输)</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;备注:</label>
+                <!-- is-invalid is-valid  -->
+                <textarea class="form-control col-lg-5" id="Edit_Remarks" rows="3" style="resize: none"></textarea>
+                <!-- invalid-feedback valid-feedback -->
+                <label class="col-form-label col-lg-2"></label>
+            </div>
+        </div>
+    </div>
+    <!-- 添加企业类别 -->
+    <div id="dialog_addType" class="card col-lg-12" style="display:none;">
+        <div class="" style="padding-top:30px;">
+            <form action="" class="formName">
+                <div class="form-group row">
+                    <label class="col-form-label mr-4">类别名称:</label>
+                    <!-- is-invalid is-valid  -->
+                    <input class="form-control col-lg-6" id="addType_Name" placeholder="类别名称" type="text">
+                    <!-- invalid-feedback valid-feedback -->
+                    <label class="col-form-label col-lg-3">(必输)</label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- 主体内容 -->
+<div class="card col-lg-12" style="height:730px;">
+    <div class="card-body">
+        <table id="tab_BankInfo" class="table custom-table dataTable no-footer" style="width:100%;text-align:center;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>编号</th>
+                    <th>银行编号</th>
+                    <th>银行类型</th>
+                    <th>银行名称</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
