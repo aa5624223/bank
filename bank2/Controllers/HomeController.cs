@@ -3311,10 +3311,12 @@ namespace bank2.Controllers
                     Wheres.Add("a.EndDate<=?");
                     paraList.Add(end);
                 }
+
                 if (Wheres.Count>0) {
                     //连接条件
                     Where = string.Join(" AND ",Wheres.ToArray());
                 }
+
                 #endregion
 
                 #region 处理请求
@@ -3358,6 +3360,7 @@ namespace bank2.Controllers
                 CreditBusinessInfo[] Beans = Query.Execute();
 
                 #endregion
+
                 #region 返回数据
 
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
@@ -3365,6 +3368,7 @@ namespace bank2.Controllers
                 msg.Add("data", JsonConvert.SerializeObject(Beans).ToString().Replace("\r\n", ""));
                 return msg.ToString();
                 #endregion
+
             }
             catch (Exception _e)
             {

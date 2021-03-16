@@ -60,6 +60,7 @@ namespace bank2.Controllers
         /// </returns>
         [HttpPost]
         public string LoginEvn(FormCollection fc) {
+
             JObject msg = new JObject();
             #region 获取数据
 
