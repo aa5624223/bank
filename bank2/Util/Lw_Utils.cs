@@ -312,6 +312,53 @@ namespace Util
             return ja;
         }
 
+        /// <summary>
+        ///  上传文件
+        /// </summary>
+        /// <param name="context">httpcontext</param>
+        /// <param name="filePath">要上传的文件名</param>
+        /// <param name="TempName">要上传的文件路径</param>
+        /// <returns>返回json msg 为OK 上传成功 error上传失败</returns>
+        /// 
+        public static JObject FileUpLoad(HttpContext context, string fileName, string Path)
+        {
+            context.Response.ContentType = "text/plain";
+            string url = context.Server.MapPath(Path);
+            List<string> filePath = new List<string>();
+            JObject json = new JObject();
+            json.Add("FileName", fileName);
+            json.Add("FilePath", url + fileName);
+            if (context.Request.Files.Count > 0)
+            {
+                foreach (string key in context.Request.Files.AllKeys)
+                {
+                    HttpPostedFile file = context.Request.Files[key];
+                    file.SaveAs(url + fileName);
+                    filePath.Add(url + fileName);
+
+                }
+                if (filePath.Count > 0)
+                {
+                    json.Add("msg", "上传成功");
+                    //foreach (string str in filePath)  遍历文件名返回给前端
+                    //{
+                    //    json.Add("Filepath", str);    
+                    //}
+                }
+                else
+                {
+                    json.Add("status",0);
+                    json.Add("msg", "OK");
+                }
+            }
+            else
+            {
+                json.Add("status", 1);
+                json.Add("msg", "fail");
+            }
+            return json;
+        }
+
         #endregion
 
         #region JSON 相关
