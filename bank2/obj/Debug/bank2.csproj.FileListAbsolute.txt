@@ -79,7 +79,6 @@ D:\gitWork\bank2\bank2\bin\zh-Hans\System.Web.Razor.resources.dll
 D:\gitWork\bank2\bank2\bin\zh-Hans\System.Web.WebPages.resources.dll
 D:\gitWork\bank2\bank2\bin\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 D:\gitWork\bank2\bank2\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
-D:\gitWork\bank2\bank2\obj\Debug\bank2.csprojAssemblyReference.cache
 D:\gitWork\bank2\bank2\obj\Debug\bank2.csproj.CoreCompileInputs.cache
 D:\gitWork\bank2\bank2\obj\Debug\bank2.csproj.CopyComplete
 D:\gitWork\bank2\bank2\obj\Debug\bank2.dll
@@ -90,4 +89,4 @@ D:\gitWork\bank2\bank2\bin\Castle.Components.Validator.dll
 D:\gitWork\bank2\bank2\bin\Castle.Core.dll
 D:\gitWork\bank2\bank2\bin\log4net.dll
 D:\gitWork\bank2\bank2\bin\NHibernate.dll
-D:\gitWork\bank2\bank2\bin\Iesi.Collections.dll
+D:\gitWork\bank2\bank2\obj\Debug\bank2.csproj.AssemblyReference.cache
