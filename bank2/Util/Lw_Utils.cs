@@ -6,11 +6,30 @@ using System.Web;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Util
 {
     public static class Lw_Utils
     {
+
+        #region 数据库
+
+        public static string getConnStr2(string CfgPath, string ConnStr)
+        {//"WebCfg/Db.json"
+            string FilePath = CfgPath;
+            JObject obj = Lw_Utils.GetFileJson<JObject>(FilePath);
+            JToken jo = null;
+            if ((jo = obj["ConnectStr"][ConnStr]) == null)
+            {
+                return null;
+            }
+            string str = jo.ToString();
+            return str;
+        }
+
+        #endregion
+
         #region 验证相关
 
         /// <summary>
@@ -405,6 +424,44 @@ namespace Util
             {
                 return (JArray)JsonConvert.DeserializeObject(Lw_Utils.ObjectToJsonStr(obj));
             }
+        }
+
+        /// <summary>
+        /// T = JArray or JObject
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static T GetFileJson<T>(string path)
+        {
+            string json = string.Empty;
+            if (!File.Exists(path))
+            {//文件不存在返回null
+                return default;
+            }
+            using (FileStream fs = new FileStream(path, FileMode.Open, System.IO.FileAccess.Read, FileShare.ReadWrite))
+            {
+                try
+                {
+                    using (StreamReader sr = new StreamReader(fs))
+                    {
+                        json = sr.ReadToEnd().ToString();
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    if (fs != null)
+                    {
+                        fs.Close();
+                    }
+                }
+            }
+            T obj = (T)JsonConvert.DeserializeObject(json);
+            return obj;
         }
 
         #endregion

@@ -10,6 +10,7 @@ var vue_Search;
 //[[公司名,银行名],[]]
 var CompanyList = [];
 var firstFlg = true;//控制删除时不刷新下拉列表
+
 $(document).ready(function () {
     //
     dialog_add_loan = $("#dialog_add_loan");
@@ -381,6 +382,7 @@ $(document).ready(function () {
             }
     });
 })
+
 //计算贷款金额
 function CalcRemain(remain, Type, Money1, Money2, Money3) {
     if (Type == '贷') {
@@ -416,6 +418,7 @@ function Dialog_Add_Loan() {
         }
     }); 
 }
+
 //新增还款
 function Dialog_Add_Repay() {
     dialog_add_repay.css("display", "block");
@@ -649,7 +652,6 @@ function Dialog_Edit(obj) {
 
 }
 
-
 /* 添加信息 */
 
 //新增贷款
@@ -719,7 +721,8 @@ function add_Loan() {
         }
     });
 }
-// 新增还款
+
+// 新增还款dd
 function add_repay() {
     var formData = new FormData();
     var Data = vue__add_repay._data;
@@ -815,6 +818,7 @@ function add_repay() {
         }
     });
 }
+
 /* 删除数据 */
 function Delete_data(id, Status,Type ) {
     if (Type == '还') {
@@ -925,6 +929,7 @@ function Delete_data(id, Status,Type ) {
 
     }
 }
+
 /* 修改数据 */
 
 //编辑贷款
@@ -989,6 +994,7 @@ function Edit_BankService1() {
 
 
 }
+
 
 /* 创建表格 */
 function Create_subTab() {
@@ -1096,6 +1102,7 @@ function Create_subTab() {
     //}).draw();
 }
 
+
 function SteDateToinputDate(d) {
     var now = new Date(d);
     //格式化日，如果小于9，前面补0
@@ -1107,6 +1114,7 @@ function SteDateToinputDate(d) {
 
     return today;
 }
+
 
 /* 表格搜索功能 */
 $.fn.dataTable.ext.search.push(
@@ -1158,6 +1166,7 @@ $.fn.dataTable.ext.search.push(
         return flg;
     }
 );
+
 
 /* 初始化搜索 */
 function init_Search() {
@@ -1247,11 +1256,13 @@ function init_Search() {
     //})
 }
 
+
 function CurrentMonthFirst() {
     var date = new Date();
     date.setDate(1);
     return date;
 }
+
 
 function CurrentMonthLast() {
     var date = new Date();

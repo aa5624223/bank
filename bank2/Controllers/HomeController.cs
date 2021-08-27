@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
+using Models.Methods;
 
 namespace bank2.Controllers
 {
@@ -878,6 +879,18 @@ namespace bank2.Controllers
                 user.UpdateAndFlush();
                 //更新session的内容
                 HttpContext.Session["UserInfo"] = user;
+
+                #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加公司";
+                LogBean.Contents = $"添加公司:{bean.Company}";
+                LogBean.UserCode = user.id+"";
+                LogBean.IDS = bean.id+"";
+                AddLogSQL(LogBean);
+
                 #endregion
 
                 #region 返回数据
@@ -936,6 +949,18 @@ namespace bank2.Controllers
                 bean.Userid = (int)user.id;
                 bean.SaveAndFlush();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加企业";
+                LogBean.Contents = $"添加企业:{bean.Company}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id + "";
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -993,7 +1018,6 @@ namespace bank2.Controllers
                 }
                 #endregion
 
-
                 #region 处理请求
 
                 DepartmentInfo bean = new DepartmentInfo();
@@ -1003,6 +1027,18 @@ namespace bank2.Controllers
                 bean.Userid = (int)user.id;
                 bean.SaveAndFlush();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加部门";
+                LogBean.Contents = $"添加部门:{bean.DptName}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id + "";
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -1024,8 +1060,9 @@ namespace bank2.Controllers
         /// <returns></returns>
         public string Add_Person(FormCollection fc) {
             JObject msg = new JObject();
+            AdminInfo user = authrize();
             #region 验证
-            if (authrize() == null)
+            if (user  == null)
             {
                 msg.Add("msg", "refuse");
                 return msg.ToString();
@@ -1044,11 +1081,13 @@ namespace bank2.Controllers
                 string NickName = fc["NickName"];
 
                 #endregion
+
                 #region 转化数据
                 int Int_DptID = int.Parse(DptID);
                 int Int_CmpID = int.Parse(CmpID);
                 //int Int_Role = int.Parse(Role);
                 #endregion
+
                 #region 处理请求
 
                 AdminInfo bean = new AdminInfo();
@@ -1069,6 +1108,18 @@ namespace bank2.Controllers
                 bean.NickName = NickName;
                 bean.SaveAndFlush();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加员工";
+                LogBean.Contents = $"添加员工:{bean.NickName}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id + "";
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -1134,8 +1185,10 @@ namespace bank2.Controllers
                     }
                 }
                 #endregion
+
                 #region 转化数据
                 #endregion
+
                 #region 处理数据
                 TypeInfo bean = new TypeInfo();
                 bean.TableName = TableName;
@@ -1145,11 +1198,24 @@ namespace bank2.Controllers
                 bean.Userid = (int)user.id;
                 bean = (TypeInfo)bean.SaveCopyAndFlush();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加类别";
+                LogBean.Contents = $"添加类别:{bean.TypeName}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id + "";
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 msg.Add("msg", "OK");
                 msg.Add("data", JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", ""));
                 return msg.ToString();
                 #endregion
+
             }
             catch (Exception _e)
             {
@@ -1192,6 +1258,7 @@ namespace bank2.Controllers
                 int i_TypeID = int.Parse(TypeID==""?"0": TypeID);
                 
                 #endregion
+
                 #region 处理请求
 
                 BankInfo bean = new BankInfo();
@@ -1203,6 +1270,18 @@ namespace bank2.Controllers
                 bean.Userid = Userid;
                 bean = (BankInfo)bean.SaveCopyAndFlush();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加银行";
+                LogBean.Contents = $"添加银行:{bean.Bank}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id + "";
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //更新session的内容
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
@@ -1227,6 +1306,7 @@ namespace bank2.Controllers
         public string Add_CreditInfo(FormCollection fc) {
             JObject msg = new JObject();
             AdminInfo user = authrize();
+
             #region 验证
             if (user == null)
             {
@@ -1234,6 +1314,7 @@ namespace bank2.Controllers
                 return msg.ToString();
             }
             #endregion
+
             try
             {
                 #region 获取数据
@@ -1281,12 +1362,25 @@ namespace bank2.Controllers
                 bean.Userid = (int)user.id;
 
                 bean.SaveAndFlush();
+                #endregion  
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加授信记录";
+                LogBean.Contents = $"添加授信记录,公司：{bean.Company},银行：{bean.Bank}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id + "";
+                AddLogSQL(LogBean);
+
                 #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
                 return msg.ToString();
                 #endregion
+
             }
             catch (Exception _e)
             {
@@ -1354,6 +1448,18 @@ namespace bank2.Controllers
                 bean.Balance = de_LoanAmount;
                 bean.Save();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加贷款记录";
+                LogBean.Contents = $"添加贷款记录,公司：{bean.Company},银行：{bean.Bank},贷款金额:{de_LoanAmount}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id + "";
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -1397,7 +1503,9 @@ namespace bank2.Controllers
                 string Repayrecord = fc["Repayrecord"];
                 string RepayAmount = fc["RepayAmount"];
                 #endregion
+
                 #region 转化数据
+
                 DateTime D_OccDate = DateTime.Parse(OccDate);
                 decimal de_RepayAmount = decimal.Parse(RepayAmount);
 
@@ -1452,6 +1560,25 @@ namespace bank2.Controllers
                     item.SaveAndFlush();    
                 }
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加还款记录";
+                LogBean.Contents = $"添加还款记录,公司：{bean2.Company},银行：{bean2.Bank},还款金额:{de_RepayAmount}";
+                LogBean.UserCode = user.id + "";
+                List<string> IDS = new List<string>();
+
+                foreach (CreditBusinessInfo item in beans)
+                {
+                    IDS.Add(item.id+"");
+                }
+
+                LogBean.IDS = string.Join(",", IDS.ToArray());
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -1475,9 +1602,9 @@ namespace bank2.Controllers
         public string Add_BankServer2_1(FormCollection fc)
         {
             JObject msg = new JObject();
-            AdminInfo User = authrize();
+            AdminInfo user = authrize();
             #region 验证
-            if (User == null)
+            if (user == null)
             {
                 msg.Add("msg", "refuse");
                 return msg.ToString();
@@ -1495,6 +1622,7 @@ namespace bank2.Controllers
                 string EndDate = fc["EndDate"];
                 string Remarks = fc["Remarks"];
                 #endregion
+
                 #region 转化数据
 
                 decimal de_LoanAmount = decimal.Parse(LoanAmount);
@@ -1519,11 +1647,24 @@ namespace bank2.Controllers
                 bean.BuildDate = DateTime.Now;
                 bean.Type = "贷";
                 bean.Flag = "未清";
-                bean.Userid = (int)User.id;
+                bean.Userid = (int)user.id;
                 bean.Balance = de_LoanAmount- de_Margin;
 
                 bean.SaveAndFlush();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加承兑记录";
+                LogBean.Contents = $"添加承兑记录,公司：{bean.Company},银行：{bean.Bank},承兑金额:{LoanAmount},保证金:{de_Margin},未清余额:{bean.Balance}";
+                LogBean.UserCode = user.id + "";
+                LogBean.IDS = bean.id+"";
+
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -1624,7 +1765,25 @@ namespace bank2.Controllers
 
                     item.SaveAndFlush();
                 }
+
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "添加承兑还款记录";
+                LogBean.Contents = $"添加承兑还款记录,公司：{bean2.Company},银行：{bean2.Bank},还款金额:{de_RepayAmount}";
+                LogBean.UserCode = user.id + "";
+                List<string> IDS = new List<string>();
+                foreach (AcceptancesInfo item in beans)
+                {
+                    IDS.Add(item.id + "");
+                }
+                LogBean.IDS = string.Join(",", IDS.ToArray());
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -1652,8 +1811,9 @@ namespace bank2.Controllers
         public string Del_Company(FormCollection fc)
         {
             JObject msg = new JObject();
+            AdminInfo user = authrize();
             #region 验证
-            if (authrize() == null)
+            if (user == null)
             {
                 msg.Add("msg", "refuse");
                 return msg.ToString();
@@ -1679,6 +1839,19 @@ namespace bank2.Controllers
                 };
                 bean.DeleteAndFlush();
                 #endregion
+
+                #region 添加日志
+
+                LogInfo LogBean = new LogInfo();
+                LogBean.LogType = "删除公司";
+                LogBean.Contents = $"删除公司 公司ID：{bean.id},公司：{bean.Company}";
+                LogBean.UserCode = user.id + "";
+                List<string> IDS = new List<string>();
+                LogBean.IDS = bean.id+"";
+                AddLogSQL(LogBean);
+
+                #endregion
+
                 #region 返回数据
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
@@ -1693,6 +1866,7 @@ namespace bank2.Controllers
                 throw;
             }
         }
+
         /// <summary>
         /// 删除用户相关的数据
         /// </summary>
@@ -1713,13 +1887,17 @@ namespace bank2.Controllers
 
                 string id = fc["Id"];
                 string DelTab = fc["DelTab"];
+
                 #endregion
+
                 #region 转化数据
 
                 long l_id = long.Parse(id);
 
                 #endregion
+
                 #region 处理数据
+
                 if (DelTab == "Cmp") {
                     CmpInfo bean = new CmpInfo();
                     bean.id = l_id;
@@ -1769,12 +1947,16 @@ namespace bank2.Controllers
                     return msg.ToString();
                 }
                 #endregion
+
                 #region 返回数据
+
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
                 msg.Add("msg", "OK");
                 msg.Add("data", l_id);
                 return msg.ToString();
+
                 #endregion
+
             }
             catch (Exception _e)
             {
@@ -1795,6 +1977,7 @@ namespace bank2.Controllers
         public string Del_Bank(FormCollection fc)
         {
             JObject msg = new JObject();
+
             #region 验证
             if (authrize() == null)
             {
@@ -1802,11 +1985,14 @@ namespace bank2.Controllers
                 return msg.ToString();
             }
             #endregion
+
             try
             {
+
                 #region 获取数据
                 string id = fc["id"];
                 #endregion
+
                 #region 转化数据
 
                 long l_id = long.Parse(id);
@@ -1820,6 +2006,7 @@ namespace bank2.Controllers
                 bean.DeleteAndFlush();
 
                 #endregion
+
                 #region 返回数据
 
                 //JsonConvert.SerializeObject(bean).ToString().Replace("\r\n", "")
@@ -1828,6 +2015,7 @@ namespace bank2.Controllers
                 return msg.ToString();
 
                 #endregion
+
             }
             catch (Exception _e)
             {
@@ -1846,6 +2034,7 @@ namespace bank2.Controllers
         public string Del_CreditInfo(FormCollection fc)
         {
             JObject msg = new JObject();
+
             #region 验证
             if (authrize() == null)
             {
@@ -1853,6 +2042,7 @@ namespace bank2.Controllers
                 return msg.ToString();
             }
             #endregion
+
             try
             {
                 #region 获取数据
@@ -1860,6 +2050,7 @@ namespace bank2.Controllers
                 string id = fc["id"];
 
                 #endregion
+
                 #region 转化数据
 
                 long l_id = long.Parse(id);
@@ -1880,6 +2071,7 @@ namespace bank2.Controllers
 
                 return msg.ToString();
                 #endregion
+
             }
             catch (Exception _e)
             {
@@ -1984,6 +2176,7 @@ namespace bank2.Controllers
             }
 
         }
+
         /// <summary>
         /// 删除贷款记录
         /// </summary>
@@ -2240,6 +2433,7 @@ namespace bank2.Controllers
                 throw;
             }
         }
+
         /// <summary>
         /// 修改公司信息
         /// </summary>
@@ -2956,6 +3150,7 @@ namespace bank2.Controllers
 
 
                 #endregion
+
                 #region 处理请求
 
                 string hql = "SELECT NEW CreditBusinessInfo(a.id,a.Type,a.OccDate,a.Abstract,a.Rates,a.Company,a.Bank,a.LoanAmount,a.EndDate,a.Remarks,a.BuildDate,a.Flag,a.RepayAmount,a.Balance,a.Status,a.Repayed,a.Repayrecord,a.Userid,c.NickName,b.id,d.id,d.TypeName)FROM CreditBusinessInfo a,CompanyInfo b,AdminInfo c,TypeInfo d WHERE b.id in (" + user.RoleCmp+ ") AND a.Userid = c.id AND a.Company=b.Company AND b.TypeID=d.id ORDER BY a.Company,a.Bank,a.OccDate";
@@ -3201,6 +3396,7 @@ namespace bank2.Controllers
         public string Search_ServerRec3(FormCollection fc) {
             JObject msg = new JObject();
             AdminInfo user = authrize();
+
             #region 验证
             if (user == null)
             {
@@ -3208,6 +3404,7 @@ namespace bank2.Controllers
                 return msg.ToString();
             }
             #endregion
+
             try
             {
                 #region 获取数据
@@ -3388,6 +3585,7 @@ namespace bank2.Controllers
         {
             JObject msg = new JObject();
             AdminInfo user = authrize();
+
             #region 验证
             if (user == null)
             {
@@ -3395,6 +3593,7 @@ namespace bank2.Controllers
                 return msg.ToString();
             }
             #endregion
+
             try
             {
                 #region 获取数据
@@ -3573,6 +3772,17 @@ namespace bank2.Controllers
 
         #endregion
 
+        #region 添加日志
+
+        public bool AddLogSQL(LogInfo bean)
+        {
+            string ConnPath = System.Configuration.ConfigurationManager.AppSettings["connStr"];
+            bean.Datetime1 = DateTime.Now;
+            string sql = Common.add(bean);
+            return Common.OptCommond(sql, ConnPath);
+        }
+
+        #endregion
     }
 
 }
